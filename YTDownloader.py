@@ -8,10 +8,10 @@ Created on Tue Oct 20 18:45:53 2020
 
 from pytube import YouTube
 import sys
-import subprocess
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -58,10 +58,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_commandLinkButtons.addWidget(self.commandLinkButton_video)
         self.horizontalLayout_input.addLayout(self.verticalLayout_commandLinkButtons)
         self.verticalLayout_top.addLayout(self.horizontalLayout_input)
-        self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setProperty("value", 24)
-        self.progressBar.setObjectName("progressBar")
-        self.verticalLayout_top.addWidget(self.progressBar)
         self.verticalLayout_total.addLayout(self.verticalLayout_top)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusBar = QtWidgets.QStatusBar(MainWindow)
@@ -84,6 +80,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
+        
+        self.commandLinkButton_audio.clicked.connect(self.getAudio)
+        self.commandLinkButton_video.clicked.connect(self.getVideo)
+        
+    def getAudio(self):
+        self.statusBar.showMessage('Downloading audio ...')
+        try:
+            yt = YouTube(self.lineEdit_ytlink.text())
+            t = yt.streams.filter(only_audio=True).all()
+            title = "_".join(yt.title.split())
+            t[0].download('Audio/', filename=title)
+            self.statusBar.showMessage('Done.')
+        except:
+            self.statusBar.clearMessage()
+            self.messageBox('Not a vaild YouTube Link.')
+    
+    def getVideo(self):
+        self.statusBar.showMessage('Downloading video ...')
+        try:
+            yt = YouTube(self.lineEdit_ytlink.text())
+            t = yt.streams.filter(only_video=True).all()
+            title = "_".join(yt.title.split())
+            t[0].download('Video/', filename=title)
+            self.statusBar.showMessage('Done.')
+        except:
+            self.statusBar.clearMessage()
+            self.messageBox('Not a vaild YouTube Link.')
+    
+    
+    def messageBox(self, message, level='warning', title='YTDownloader'):
+        msg = QtWidgets.QMessageBox()
+        if level == 'warning':
+            msg.setWindowTitle('WARNING')
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+        elif level == 'error':
+            msg.setWindowTitle('ERROR')
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setText(message)
+        msg.exec_()
         
 
 if __name__ == "__main__":
