@@ -88,7 +88,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage('Downloading audio ...')
         try:
             yt = YouTube(self.lineEdit_ytlink.text())
-            t = yt.streams.filter(only_audio=True).all()
+            t = yt.streams.filter(only_audio=True)
             title = "_".join(yt.title.split())
             t[0].download('Audio/', filename=title)
             self.statusBar.showMessage('Done.')
@@ -100,7 +100,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage('Downloading video ...')
         try:
             yt = YouTube(self.lineEdit_ytlink.text())
-            t = yt.streams.filter(only_video=True).all()
+            t = yt.streams.filter(only_video=True)
             title = "_".join(yt.title.split())
             t[0].download('Video/', filename=title)
             self.statusBar.showMessage('Done.')
