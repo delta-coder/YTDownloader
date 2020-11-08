@@ -85,6 +85,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.commandLinkButton_video.clicked.connect(self.getVideo)
         
     def getAudio(self):
+        self.disableButtons()
         self.statusBar.showMessage('Downloading audio ...')
         try:
             yt = YouTube(self.lineEdit_ytlink.text())
@@ -95,8 +96,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             self.statusBar.clearMessage()
             self.messageBox('Not a vaild YouTube Link.')
+        self.enableButtons()
     
     def getVideo(self):
+        self.disableButtons()
         self.statusBar.showMessage('Downloading video ...')
         try:
             yt = YouTube(self.lineEdit_ytlink.text())
@@ -107,6 +110,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             self.statusBar.clearMessage()
             self.messageBox('Not a vaild YouTube Link.')
+        self.enableButtons()
     
     
     def messageBox(self, message, level='warning', title='YTDownloader'):
@@ -119,7 +123,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setText(message)
         msg.exec_()
-        
+    
+    def disableButtons(self):
+        self.commandLinkButton_audio.setEnabled(False)
+        self.commandLinkButton_video.setEnabled(False)
+    
+    def enableButtons(self):
+        self.commandLinkButton_audio.setEnabled(True)
+        self.commandLinkButton_video.setEnabled(True)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
